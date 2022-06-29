@@ -37,11 +37,12 @@ public class Normalize {
     public static class NormalizeMapper extends Mapper<LongWritable, Text, Text, Text> {
         public void map(LongWritable key, Text value, Context context) {
             String line = value.toString();
-            String[] tokens = line.split(",");
-            String name1 = tokens[0].substring(1);
-            String name2 = tokens[1].substring(0, tokens[1].length() - 1);
+            String[] tokens1 = line.split("\t");
+            String[] tokens2 = tokens1[0].split(",");
+            String name1 = tokens2[0].substring(1);
+            String name2 = tokens2[1].substring(0, tokens2[1].length() - 1);
             Text text1 = new Text(name1);
-            Text text2 = new Text(name2 + ",1");
+            Text text2 = new Text(name2 + "," + tokens1[1]);
             try {
                 context.write(text1, text2);
             } catch (IOException e) {
@@ -56,13 +57,11 @@ public class Normalize {
         Text lastname = null;
         HashMap<String, Integer> map = new HashMap<>();
 
-        public void reducer(Text key, Text value, Context context) {
+        public void reduce(Text key, Iterable<Text> values, Context context) {
             if (lastname == null) {
                 lastname = new Text(key);
             } else if (!lastname.equals(key)) {
                 String s = "";
-
-                s = s.substring(0, s.length() - 1);
                 int sum = 0;
                 for (String k : map.keySet()) {
                     sum += map.get(k);
@@ -73,6 +72,7 @@ public class Normalize {
                     s += String.valueOf(((double) map.get(k)) / sum);
                     s += "|";
                 }
+                s = s.substring(0, s.length() - 1);
                 Text t = new Text(s);
                 try {
                     context.write(lastname, t);
@@ -84,14 +84,16 @@ public class Normalize {
                 lastname = new Text(key);
                 map = new HashMap<>();
             }
-            String svalue = value.toString();
-            String[] tokens = svalue.split(",");
-            if (map.containsKey(tokens[0])) {
-                int n = map.get(tokens[0]);
-                n += Integer.valueOf(tokens[1]);
-                map.put(svalue, n);
-            } else {
-                map.put(svalue, Integer.valueOf(tokens[1]));
+            for (Text value : values) {
+                String svalue = value.toString();
+                String[] tokens = svalue.split(",");
+                if (map.containsKey(tokens[0])) {
+                    int n = map.get(tokens[0]);
+                    n += Integer.valueOf(tokens[1]);
+                    map.put(svalue, n);
+                } else {
+                    map.put(tokens[0], Integer.valueOf(tokens[1]));
+                }
             }
         }
 
