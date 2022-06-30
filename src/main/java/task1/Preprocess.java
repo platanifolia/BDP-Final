@@ -150,9 +150,11 @@ public class Preprocess {
     }
 
     public static class PreprocessReducer extends Reducer<NullWritable, Text, NullWritable, Text> {
-        public void reduce(NullWritable key, Text value, Context context) {
+        public void reduce(NullWritable key, Iterable<Text> values, Context context) {
             try {
-                context.write(key, value);
+                for (Text value : values) {
+                    context.write(key, value);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
