@@ -22,7 +22,7 @@ public class LabelPropagation {
         String output1 = args[1];
         String output2 = args[2];
         int iteration = 0;
-        int iterationmax = 5;
+        int iterationmax = 20;
         boolean status = false;
         while (iteration <= iterationmax) {
             if (iteration != 0) {
@@ -63,7 +63,7 @@ public class LabelPropagation {
 
         public void setup(Context context) {
             try {
-                URI[] cacheFiles = context.getCacheFiles();
+                Path[] cacheFiles = context.getLocalCacheFiles();
                 if (cacheFiles != null && cacheFiles.length > 0) {
                     String line;
                     BufferedReader joinReader = new BufferedReader(new FileReader(cacheFiles[0].toString()));

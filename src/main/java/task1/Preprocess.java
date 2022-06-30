@@ -66,7 +66,7 @@ public class Preprocess {
 
         public void setup(Context context) {
             try {
-                URI[] cacheFiles = context.getCacheFiles();
+                Path[] cacheFiles = context.getLocalCacheFiles();
                 if (cacheFiles != null && cacheFiles.length > 0) {
                     String name;
                     BufferedReader joinReader = new BufferedReader(new FileReader(cacheFiles[0].toString()));

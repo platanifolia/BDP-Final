@@ -10,18 +10,13 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 
 public class CharacterMapper extends Mapper<Object, Text, Text, IntWritable> {
-    private ArrayList<String> name_token;
     private final static IntWritable one = new IntWritable(1);
-
-    @Override
-    protected void setup(Context context) {
-        name_token = new ArrayList<>();
-    }
 
     @Override
     protected void map(Object key, Text value, Context context) throws IOException,
             InterruptedException {
 
+        ArrayList<String> name_token=new ArrayList<>();
         StringTokenizer string_stream = new StringTokenizer(value.toString());
 
         while (string_stream.hasMoreTokens()) {
