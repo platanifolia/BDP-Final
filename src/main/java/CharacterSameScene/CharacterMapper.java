@@ -31,7 +31,7 @@ public class CharacterMapper extends Mapper<Object, Text, Text, IntWritable> {
                     Objects.equals(temp, "旃檀功德佛") ||
                     Objects.equals(temp, "江流儿") ||
                     Objects.equals(temp, "江流")) {
-                temp = "唐三藏";
+                temp = "唐僧";
             } else if (Objects.equals(temp, "悟空") ||
                     Objects.equals(temp, "齐天大圣") ||
                     Objects.equals(temp, "美猴王") ||
@@ -69,6 +69,10 @@ public class CharacterMapper extends Mapper<Object, Text, Text, IntWritable> {
                 temp = "观音菩萨";
             } else if (Objects.equals(temp, "玉皇大帝")) {
                 temp = "玉帝";
+            }  else if (Objects.equals(temp, "唐太宗")) {
+                temp = "李世民";
+            } else if (Objects.equals(temp, "佑圣真君")) {
+                temp = "杨戬二郎";
             }
             if (!name_token.contains(temp))
                 name_token.add(temp);
